@@ -185,3 +185,27 @@ vector<int> SocialNetwork::findCommonFriends(int id1, int id2) {
     }
     return commonFriends;
 }
+
+vector<User> SocialNetwork::getAllUsersData() const {
+    vector<User> resultVector;
+
+    for (const auto& pair : users) {
+        resultVector.push_back(pair.second);
+    }
+
+    return resultVector;
+}
+
+vector<pair<int, int>> SocialNetwork::getAllConnectionsData() const {
+    vector<pair<int, int>> resultVector;
+
+    for (const auto& pair : adjacencyList) {
+        int userId = pair.first;
+        for (const int& friendId : pair.second) {
+            if (userId < friendId) {
+                resultVector.emplace_back(userId, friendId);
+            }
+        }
+    }
+    return resultVector;
+}

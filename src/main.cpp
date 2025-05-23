@@ -38,27 +38,10 @@ int main() {
 
     myNetwork.addConnection(frank, grace);
 
-    auto testCommonFriends = [&](int a, int b) {
-        auto common = myNetwork.findCommonFriends(a, b);
-        cout << "Common friends between " << a << " (" << myNetwork.getUser(a)->name << ") and "
-             << b << " (" << myNetwork.getUser(b)->name << "): ";
-        if (common.empty()) {
-            cout << "None";
-        } else {
-            for (const auto& uid : common) {
-                User* u = myNetwork.getUser(uid);
-                cout << uid << " (" << (u ? u->name : "Unknown") << ") ";
-            }
-        }
-        cout << endl;
-    };
-
-    testCommonFriends(alice, bob);      // Should print Charlie
-    testCommonFriends(alice, charlie);  // Should print Bob
-    testCommonFriends(bob, charlie);    // Should print Alice and Emily
-    testCommonFriends(david, emily);    // Should print None
-    testCommonFriends(frank, grace);    // Should print None
-    testCommonFriends(alice, frank);    // Should print None
+    auto connections = myNetwork.getAllConnectionsData();
+    for (const auto& conn : connections) {
+        cout << "(" << conn.first << ", " << conn.second << ")" << endl;
+    }
 
     return 0;
 }
