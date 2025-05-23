@@ -152,3 +152,36 @@ vector<int> SocialNetwork::getShortestPath(int startId, int endId) {
     std::reverse(path.begin(), path.end());
     return path;
 }
+
+vector<int> SocialNetwork::findCommonFriends(int id1, int id2) {
+    if (!users.count(id1) || !users.count(id2)) {
+        cout << "One or more IDs provided does not exist." << endl;
+        return {};
+    }
+
+    if (id1 == id2) {
+        return {};
+    }
+
+    vector<int> friendsOfId1 = adjacencyList.at(id1);
+    vector<int> friendsOfId2 = adjacencyList.at(id2);
+    vector<int> commonFriends;
+
+    // Original algorithm (O(n*m))
+    // for (auto& friendId1 : friendsOfId1) {
+    //     for (auto& friendId2 : friendsOfId2) {
+    //         if (friendId1 == friendId2) {
+    //             commonFriends.push_back(friendId1);
+    //         }
+    //     }
+    // }
+
+    // More efficient version using set for O(n + m) time
+    set<int> friendsSet(friendsOfId1.begin(), friendsOfId1.end());
+    for (auto& friendId2 : friendsOfId2) {
+        if (friendsSet.count(friendId2) && friendId2 != id1 && friendId2 != id2) {
+            commonFriends.push_back(friendId2);
+        }
+    }
+    return commonFriends;
+}
