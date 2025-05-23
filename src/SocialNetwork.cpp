@@ -1,6 +1,10 @@
 #include "SocialNetwork.h"
 #include <iostream>
 #include <algorithm>
+#include <queue>
+#include <set>
+#include <map>
+#include <vector>
 
 using namespace std;
 
@@ -33,7 +37,7 @@ void SocialNetwork::displayUserProfile(int id) {
     if (user_ptr != nullptr) {
         user_ptr->displayProfile();
     } else {
-        cout << "Error retrieving user." << endl;
+        cout << "\nError retrieving user with id: " << id << "." << endl;
     }
 }
 
@@ -66,17 +70,17 @@ bool SocialNetwork::removeConnection(int id1, int id2) {
     }
 
     auto& friends1 = adjacencyList.at(id1);
-    auto it1 = find(friends1.begin(), friends1.end(), id2);
+    auto it1 = std::find(friends1.begin(), friends1.end(), id2);
     if (it1 == friends1.end()) {
         cout << "Users are not friends." << endl;
         return false;
     }
 
     auto& friendsOfId1 = adjacencyList.at(id1);
-    friendsOfId1.erase(remove(friendsOfId1.begin(), friendsOfId1.end(), id2), friendsOfId1.end());
+    friendsOfId1.erase(std::remove(friendsOfId1.begin(), friendsOfId1.end(), id2), friendsOfId1.end());
 
     auto& friendsOfId2 = adjacencyList.at(id2);
-    friendsOfId2.erase(remove(friendsOfId2.begin(), friendsOfId2.end(), id1), friendsOfId2.end());
+    friendsOfId2.erase(std::remove(friendsOfId2.begin(), friendsOfId2.end(), id1), friendsOfId2.end());
 
     return true;
 }
@@ -85,13 +89,13 @@ void SocialNetwork::displayFriends(int id) {
     User* user = getUser(id);
     
     if (user == nullptr) {
-        cout << "User does not exist." << endl;
+        cout << "\nUser does not exist." << endl;
     } else {
-        cout << "Friends of " << user->name << ":" << endl;
+        cout << "\nFriends of " << user->name << ":" << endl;
         
         auto& friendsOfUser = adjacencyList.at(id);
         if (friendsOfUser.empty()) {
-            cout << "No friends found." << endl;
+            cout << "No friends found." << endl << endl;
         } else {
             for (auto& friendId : friendsOfUser) {
                 User* friendUser = getUser(friendId);
@@ -99,4 +103,52 @@ void SocialNetwork::displayFriends(int id) {
             }
         }
     }
+}
+
+vector<int> SocialNetwork::getShortestPath(int startId, int endId) {
+    if (!users.count(startId) || !users.count(endId)) {
+        cout << "One or more IDs provided does not exist." << endl;
+        return {};
+    }
+
+    if (startId == endId) {
+        return {startId};
+    }
+
+    queue<int> q;
+    set<int> visited;
+    map<int, int> parent;
+
+    q.push(startId);
+    visited.insert(startId);
+
+    while (!q.empty()) {
+        int currentId = q.front();
+        q.pop();
+
+        if (currentId == endId) {
+            break;
+        }
+
+        for (int neighborId : adjacencyList.at(currentId)) {
+            if (!visited.count(neighborId)) {
+                visited.insert(neighborId);
+                parent[neighborId] = currentId;
+                q.push(neighborId);
+            }
+        }
+    }
+
+    vector<int> path;
+    if (parent.count(endId) == 0) {
+        return {};
+    }
+    int currentId = endId;
+    while (currentId != startId) {
+        path.push_back(currentId);
+        currentId = parent[currentId];
+    }
+    path.push_back(startId);
+    std::reverse(path.begin(), path.end());
+    return path;
 }

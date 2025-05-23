@@ -3,6 +3,8 @@
 
 using namespace std;
 
+User::User() : id(0), username(""), name(""), age(0), interests({"None Provided"}) {}
+
 User::User(int id, const std::string& username, const std::string& name, int age, const std::vector<std::string>& interests)
 {
     this->id = id;

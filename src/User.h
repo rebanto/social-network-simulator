@@ -13,6 +13,7 @@ public:
     int age;
     std::vector<std::string> interests;
 
+    User(); // <-- Add this line
     User(int id, const std::string& username, const std::string& name, int age, const std::vector<std::string>& interests = {"None Provided"});
     void displayProfile() const;
 };
