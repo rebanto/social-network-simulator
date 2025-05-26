@@ -1,6 +1,6 @@
-# Social Network Simulator (C++ Core Logic)
+# Social Network Simulator
 
-This repository contains the foundational C++ core logic for a social network simulator. It's built to efficiently manage users, connections, and perform complex graph analysis. This project lays the groundwork for a complete social network application.
+This repository contains the foundational C++ core logic for a social network simulator. It's built to efficiently manage users, connections, and perform complex graph analysis.
 
 ---
 
@@ -27,7 +27,7 @@ The C++ core logic provides the following robust functionalities:
 
 ## Core Technologies
 
-* **Language:** C++17
+* **Language:** C++
 * **Core Data Structures:** `std::map`, `std::vector`, `std::set`, `std::queue`
 
 ---
