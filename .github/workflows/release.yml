@@ -1,0 +1,42 @@
+name: Release
+
+# Push a tag like v1.0.0 to build SocialGraph.exe and publish it as a GitHub release.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc
+
+      # MinGW with -static produces a single exe with no runtime DLLs to ship.
+      - name: Build and test
+        shell: msys2 {0}
+        run: cmd //c build.bat
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $name = "SocialGraph-${{ github.ref_name }}-windows-x64"
+          New-Item -ItemType Directory -Path $name | Out-Null
+          Copy-Item build/SocialGraph.exe, README.md -Destination $name
+          Compress-Archive -Path $name -DestinationPath "$name.zip"
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" `
+            "SocialGraph-${{ github.ref_name }}-windows-x64.zip" build/SocialGraph.exe `
+            --title "Social Graph ${{ github.ref_name }}" --generate-notes
