@@ -105,6 +105,14 @@ void SocialNetwork::displayFriends(int id) {
     }
 }
 
+vector<int> SocialNetwork::getFriends(int id) const {
+    auto it = adjacencyList.find(id);
+    if (it == adjacencyList.end()) {
+        return {};
+    }
+    return it->second;
+}
+
 vector<int> SocialNetwork::getShortestPath(int startId, int endId) {
     if (!users.count(startId) || !users.count(endId)) {
         cout << "One or more IDs provided does not exist." << endl;
