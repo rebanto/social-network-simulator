@@ -29,19 +29,38 @@ The C++ core logic provides the following robust functionalities:
 
 * **Language:** C++
 * **Core Data Structures:** `std::map`, `std::vector`, `std::set`, `std::queue`
+* **Desktop UI:** Win32 API + GDI+
 
 ---
 
-## Next Steps
+## Desktop App: Social Graph
 
-This repository currently houses the robust C++ backend logic. The next major phase is to build a **frontend** to provide a graphical user interface (GUI) for interacting with this social network.
+The `windows-frontend` branch adds **Social Graph**, a native Windows desktop app (Win32 + GDI+, no extra dependencies) that links straight to the `SocialNetwork` classes.
 
-I am considering two primary approaches for the frontend:
+![Social Graph screenshot](docs/screenshot.png)
 
-1.  **C++ Web Server + JavaScript Frontend:** This would involve adapting the `main.cpp` to run a C++ web server (using a library like Crow or a custom Winsock implementation) that exposes RESTful API endpoints. A separate web-based frontend (using HTML, CSS, and JavaScript frameworks like React or Vue, possibly D3.js for visualization) would then consume these APIs.
-2.  **C++ Windows Desktop Application:** This involves building a native Windows application using a UI framework (such as Dear ImGui, MFC, or Qt) that directly links to and utilizes the `SocialNetwork` C++ classes. This would result in a standalone `.exe` file.
+* **Live network graph:** an animated force-directed layout. Drag nodes, pan with the mouse, scroll to zoom, and use **Fit view** / **Re-layout**.
+* **People sidebar:** network stats (people, links, average friends) and a list of everyone with their friend counts.
+* **Profile panel:** a person's details, interests, and friends. Click a friend to jump to them.
+* **Compare two people:** select one person, then right-click (or Ctrl+click) another to see:
+    * the **shortest path** (degrees of separation), highlighted on the graph
+    * their **mutual friends**
+    * a one-click **Connect** / **Remove connection** button
+* **Add people:** use the dialog with validation (unique username, age from 1 to 150, comma-separated interests).
+* Dark theme, per-monitor DPI aware, and flicker-free double-buffered rendering.
 
-The choice of frontend will dictate further development.
+**Keyboard:** `Esc` clears the selection, `Ctrl+N` adds a person, `F` fits the view, `R` re-runs the layout.
+
+### Building
+
+With MinGW-w64 (for example, the MSYS2 `mingw64` toolchain) on your `PATH`:
+
+```bat
+build.bat
+```
+
+This produces `build\SocialGraph.exe` (the GUI) and `build\network_demo.exe` (the console demo from `main.cpp`).
+A `CMakeLists.txt` is also included for Visual Studio / MSVC or CMake + MinGW users.
 
 ---
 

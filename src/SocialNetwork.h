@@ -23,6 +23,7 @@ public:
     bool addConnection(int id1, int id2);
     bool removeConnection(int id1, int id2);
     void displayFriends(int id);
+    std::vector<int> getFriends(int id) const;
 
     // graph algorithms
     std::vector<int> getShortestPath(int startId, int endId);
